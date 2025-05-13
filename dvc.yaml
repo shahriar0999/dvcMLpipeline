@@ -14,3 +14,12 @@ stages:
     - .\src\data\data_preprocessing.py
     outs:
     - .\data\processed
+  feature_engineering:
+    cmd: python .\src\data\feature_engineering.py
+    deps:
+    - .\data\processed
+    - .\src\data\feature_engineering.py
+    params:
+    - feature_engineering.max_features
+    outs:
+    - .\data\features
