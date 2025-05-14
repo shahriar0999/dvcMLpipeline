@@ -34,3 +34,10 @@ stages:
     - model_building.random_state
     outs:
     - .\models\model.pkl
+  model_evaluation:
+    cmd: python .\src\models\model_evaluation.py
+    deps:
+    - .\models\model.pkl
+    - .\src\models\model_evaluation.py
+    metrics:
+    - metrics.json
