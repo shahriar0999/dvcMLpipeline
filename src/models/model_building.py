@@ -76,7 +76,7 @@ def train_model(X_train, y_train, model_params):
 def save_model(model):
     try:
         logger.info("Saving trained model")
-        with open('model.pkl', 'wb') as f:
+        with open('models/model.pkl', 'wb') as f:
             pickle.dump(model, f)
         logger.info("Model saved successfully")
     except Exception as e:

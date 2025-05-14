@@ -45,6 +45,7 @@ def load_data(data_url: str) -> pd.DataFrame:
     try:
         df = pd.read_csv(data_url)
         return df
+        logger.debug('data loaded')
     except pd.errors.ParserError as e:
         print(f"Error: Failed to parse the CSV file from {data_url}.")
         print(e)
@@ -58,8 +59,9 @@ def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     try:
         df.drop(columns=['tweet_id'], inplace=True)
         final_df = df[df['sentiment'].isin(['happiness', 'sadness'])]
-        final_df['sentiment'].replace({'happiness': 1, 'sadness': 0}, inplace=True)
+        final_df.loc[:, 'sentiment'] = final_df['sentiment'].map({'happiness': 1, 'sadness': 0})
         return final_df
+        logger.debug('data preprocessed')
     except KeyError as e:
         print(f"Error: Missing column {e} in the dataframe.")
         raise
@@ -74,6 +76,7 @@ def save_data(train_data: pd.DataFrame, test_data: pd.DataFrame, data_path: str)
         os.makedirs(data_path, exist_ok=True)
         train_data.to_csv(os.path.join(data_path, "train.csv"), index=False)
         test_data.to_csv(os.path.join(data_path, "test.csv"), index=False)
+        logger.debug('data saved')
     except Exception as e:
         print(f"Error: An unexpected error occurred while saving the data.")
         print(e)
@@ -86,6 +89,7 @@ def main():
         final_df = preprocess_data(df)
         train_data, test_data = train_test_split(final_df, test_size=test_size, random_state=42)
         save_data(train_data, test_data, data_path='data')
+        logger.info("Data ingestion completed successfully.")
     except Exception as e:
         print(f"Error: {e}")
         print("Failed to complete the data ingestion process.")
