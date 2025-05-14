@@ -30,7 +30,7 @@ except Exception as e:
 def load_model():
     try:
         logger.info("Loading trained model")
-        with open('model.pkl', 'rb') as f:
+        with open('models/model.pkl', 'rb') as f:
             model = pickle.load(f)
         logger.debug("Model loaded successfully")
         return model
