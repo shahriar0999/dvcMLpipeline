@@ -23,3 +23,14 @@ stages:
     - feature_engineering.max_features
     outs:
     - .\data\features
+  train_model:
+    cmd: python .\src\models\model_building.py
+    deps:
+    - .\data\features\train_bow.csv
+    - .\src\models\model_building.py
+    params:
+    - model_building.max_depth
+    - model_building.n_estimators
+    - model_building.random_state
+    outs:
+    - .\models\model.pkl
