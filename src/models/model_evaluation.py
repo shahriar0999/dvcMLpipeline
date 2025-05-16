@@ -5,6 +5,7 @@ import pickle
 import json
 import os
 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score
+import dvclive
 
 # Logging configuration
 try:
@@ -74,7 +75,21 @@ def evaluate_model(model, X_test, y_test):
             'auc': roc_auc_score(y_test, y_pred_proba)
         }
         
-        logger.debug(f"Evaluation metrics calculated: {metrics_dict}")
+        # Log metrics with DVCLive
+        with dvclive.Live() as live:
+            live.log_metric("accuracy", metrics_dict['accuracy'])
+            live.log_metric("precision", metrics_dict['precision'])
+            live.log_metric("recall", metrics_dict['recall'])
+            live.log_metric("auc", metrics_dict['auc'])
+
+            # Log individual model parameters
+            params = model.get_params()
+            live.log_param("learning_rate", params['learning_rate'])
+            live.log_param("n_estimators", params['n_estimators'])
+            live.log_param("max_depth", params['max_depth'])
+            live.log_param("random_state", params['random_state'])
+        
+        logger.debug(f"Evaluation metrics calculated and logged: {metrics_dict}")
         return metrics_dict
     except Exception as e:
         logger.error(f"Error during model evaluation: {str(e)}")
